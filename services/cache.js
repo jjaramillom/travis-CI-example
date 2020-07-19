@@ -24,6 +24,7 @@ mongoose.Query.prototype.exec = async function () {
 		return exec.apply(this, arguments);
 	}
 
+	//getQuery is deprecated
 	const key = JSON.stringify({
 		...this.getQuery(),
 		collection: this.mongooseCollection.name,
