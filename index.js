@@ -13,8 +13,8 @@ require('./services/cache');
 mongoose.Promise = global.Promise;
 console.log('connecting to mongo:', keys.mongoURI);
 
-mongoose.connect(keys.mongoURI, { useMongoClient: true }).catch(err =>{
-  console.error('Could not connect to MONGO')
+mongoose.connect(keys.mongoURI, { useMongoClient: true }).catch((err) => {
+  console.error('Could not connect to MONGO');
 });
 
 const app = express();
@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: [keys.cookieKey]
+    keys: [keys.cookieKey],
   })
 );
 app.use(passport.initialize());
@@ -32,9 +32,8 @@ app.use(passport.session());
 require('./routes/authRoutes')(app);
 require('./routes/blogRoutes')(app);
 
-if (['production'].includes(process.env.NODE_ENV)) {
-  app.use(express.static('client/build'));
-
+app.use(express.static('client/build'));
+if (['production', 'ci'].includes(process.env.NODE_ENV)) {
   const path = require('path');
   app.get('*', (req, res) => {
     res.sendFile(path.resolve('client', 'build', 'index.html'));
